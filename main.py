@@ -1,26 +1,24 @@
 import streamlit as st
-from PIL import Image 
+from PIL import Image
 import pickle as pkl
 import numpy as np
 
-class_list = {'0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9':'9','10':'10'}
+st.title('Handwritten Digit Recognition')
 
-st.title('Ảnh chữ số viết tay')
-
-input = open('lrc_mnist.pkl','rb')
+input = open('lrc_mnist.pkl', 'rb')
 model = pkl.load(input)
 
-st.header('Upload an image')
-image = st.file_uploader('Choose an image', type=(['png', 'jpg', 'jpeg']))
+st.header('Upload handwritten digit image')
+uploaded_file = st.file_uploader("Choose an image file", type=(['png', 'jpg', 'jpeg']))
 
-if image is not None:
-  image = Image.open(image)
-  st.image(image, caption='Test image')
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    st.image(image, caption='Test image')
 
-  if st.button('Predict'):
-    image = image.resize((8*8,1))
-    vector = np.array(image)
-    label= str(st.write(model.predict(vector))[0])
+    if st.button('Predict'):
+        image = image.resize((8*8, 1))
+        feature_vector = np.array(image)
+        label = str((model.predict(feature_vector))[0])
 
-    st.header('Result')
-    st.text(class_list[label])
+        st.header('Result')
+        st.text(label)
